@@ -1,0 +1,6 @@
+.env
+*.csv
+*.tmp
+.gems/
+cities/
+.DS_Store
