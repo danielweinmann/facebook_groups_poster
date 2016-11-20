@@ -6,16 +6,20 @@ require 'csv'
 
 @minimum_members = ENV['MINIMUM_MEMBERS'].to_i
 begin
-  @exclude = CSV.read('exclude.csv').map { |line| line[0] }
+  @groups_to_exclude = CSV.read('groups_to_exclude.csv').map { |line| line[0] }
 rescue
-  @exclude = []
+  @groups_to_exclude = []
 end
 begin
   @searches = CSV.read('searches.csv').map { |line| line[0] }
 rescue
   @searches = []
 end
-last_search = File.read(File.expand_path('../', __FILE__) + "/search.tmp")
+begin
+  last_search = File.read(File.expand_path('../', __FILE__) + "/search.tmp")
+rescue
+  last_search = ""
+end
 index = @searches.find_index(last_search)
 @searches = @searches[index + 1..(@searches.size - 1)] if index
 @graph = Koala::Facebook::API.new(ENV['FACEBOOK_ACCESS_TOKEN'])
@@ -25,7 +29,7 @@ index = @searches.find_index(last_search)
   @graph.search(search, type: 'group').each do |group|
     next if group["administrator"]
     next if group["name"].match(/couchsurfing/i)
-    next if @exclude.include?(group["id"])
+    next if @groups_to_exclude.include?(group["id"])
     members = @graph.get_connections(group["id"], "members")
     count = members.size
     while count < @minimum_members do
@@ -34,7 +38,7 @@ index = @searches.find_index(last_search)
       count += members.size
     end
     next if count < @minimum_members
-    CSV.open(File.expand_path('../', __FILE__) + "/joins.csv", "a") do |csv|
+    CSV.open(File.expand_path('../', __FILE__) + "/groups_to_join.csv", "a") do |csv|
       csv << [group["id"], group["name"]]
     end
     puts "  #{group["id"]}, #{group["name"]}"

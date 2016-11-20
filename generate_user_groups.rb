@@ -6,9 +6,9 @@ require 'csv'
 
 @minimum_members = ENV['MINIMUM_MEMBERS'].to_i
 begin
-  @exclude = CSV.read('exclude.csv').map { |line| line[0] }
+  @groups_to_exclude = CSV.read('groups_to_exclude.csv').map { |line| line[0] }
 rescue
-  @exclude = []
+  @groups_to_exclude = []
 end
 @graph = Koala::Facebook::API.new(ENV['FACEBOOK_ACCESS_TOKEN'])
 
@@ -16,7 +16,7 @@ end
   puts "#{group["id"]}, #{group["name"]}"
   next if group["administrator"]
   next if group["name"].match(/couchsurfing/i)
-  next if @exclude.include?(group["id"])
+  next if @groups_to_exclude.include?(group["id"])
   members = @graph.get_connections(group["id"], "members")
   count = members.size
   while count < @minimum_members do
@@ -25,7 +25,7 @@ end
     count += members.size
   end
   next if count < @minimum_members
-  CSV.open("groups.csv", "a") do |csv|
+  CSV.open("user_groups.csv", "a") do |csv|
     csv << [group["id"], group["name"]]
   end
 end
