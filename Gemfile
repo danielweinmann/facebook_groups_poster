@@ -4,6 +4,6 @@ ruby "2.3.0"
 
 gem 'dotenv'
 gem 'koala'
-gem 'wombat'
+gem 'watir'
 gem 'countries'
 gem 'cities'

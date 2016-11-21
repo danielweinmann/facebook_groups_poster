@@ -1,4 +1,4 @@
-@file_name = File.expand_path('../', __FILE__) + "/final.csv"
+@file_name = File.expand_path('../', __FILE__) + "/groups_to_join.csv"
 @lines = []
 File.open(@file_name, "r") do |file|
   file.each_line do |line|

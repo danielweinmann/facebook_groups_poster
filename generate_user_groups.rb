@@ -4,13 +4,13 @@ Dotenv.load
 require 'koala'
 require 'csv'
 
-@minimum_members = ENV['MINIMUM_MEMBERS'].to_i
+@minimum_members = ENV["MINIMUM_MEMBERS"].to_i
 begin
   @groups_to_exclude = CSV.read('groups_to_exclude.csv').map { |line| line[0] }
 rescue
   @groups_to_exclude = []
 end
-@graph = Koala::Facebook::API.new(ENV['FACEBOOK_ACCESS_TOKEN'])
+@graph = Koala::Facebook::API.new(ENV["FACEBOOK_ACCESS_TOKEN"])
 
 @graph.get_connections("me", "groups").each do |group|
   puts "#{group["id"]}, #{group["name"]}"

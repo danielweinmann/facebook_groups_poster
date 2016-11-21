@@ -4,7 +4,7 @@ Dotenv.load
 require 'koala'
 require 'csv'
 
-@minimum_members = ENV['MINIMUM_MEMBERS'].to_i
+@minimum_members = ENV["MINIMUM_MEMBERS"].to_i
 begin
   @groups_to_exclude = CSV.read('groups_to_exclude.csv').map { |line| line[0] }
 rescue
@@ -22,7 +22,7 @@ rescue
 end
 index = @searches.find_index(last_search)
 @searches = @searches[index + 1..(@searches.size - 1)] if index
-@graph = Koala::Facebook::API.new(ENV['FACEBOOK_ACCESS_TOKEN'])
+@graph = Koala::Facebook::API.new(ENV["FACEBOOK_ACCESS_TOKEN"])
 
 @searches.each do |search|
   puts "Searching for '#{search}'"

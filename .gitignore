@@ -4,3 +4,5 @@
 .gems/
 cities/
 .DS_Store
+*.sublime-project
+*.sublime-workspace
